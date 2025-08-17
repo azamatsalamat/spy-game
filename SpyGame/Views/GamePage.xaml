@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SpyGame.Views.GamePage"
+             Title="Spy Game"
+             BackgroundColor="#1a1a1a">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="#2a2a2a" 
+               CornerRadius="0" 
+               Padding="20,10"
+               Margin="0">
+            
+            <VerticalStackLayout Spacing="5">
+                <Label x:Name="CurrentPlayerLabel"
+                       Text="Player 1's Turn"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center" />
+
+                <Label x:Name="GameTimerLabel"
+                       Text="Time: 00:00"
+                       FontSize="14"
+                       TextColor="#cccccc"
+                       HorizontalOptions="Center"
+                       IsVisible="False" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Main Game Area -->
+        <Grid Grid.Row="1" Padding="20">
+            
+            <!-- Card -->
+            <Frame x:Name="CardFrame"
+                   BackgroundColor="#2a2a2a"
+                   CornerRadius="20"
+                   Padding="30"
+                   Margin="20"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   WidthRequest="300"
+                   HeightRequest="400"
+                   IsVisible="True">
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Card Header -->
+                    <Label Grid.Row="0"
+                           x:Name="CardHeaderLabel"
+                           Text="Tap to reveal your card"
+                           FontSize="16"
+                           TextColor="#cccccc"
+                           HorizontalOptions="Center"
+                           Margin="0,0,0,20" />
+
+                    <!-- Card Content -->
+                    <Label Grid.Row="1"
+                           x:Name="CardContentLabel"
+                           Text=""
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="False" />
+
+                    <!-- Card Footer -->
+                    <Label Grid.Row="2"
+                           x:Name="CardFooterLabel"
+                           Text=""
+                           FontSize="14"
+                           TextColor="#cccccc"
+                           HorizontalOptions="Center"
+                           Margin="0,20,0,0"
+                           IsVisible="False" />
+
+                </Grid>
+
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCardTapped" />
+                </Frame.GestureRecognizers>
+            </Frame>
+
+            <!-- Instructions -->
+            <Label Grid.Row="1"
+                   x:Name="InstructionsLabel"
+                   Text="Pass the phone to the next player and tap the card to reveal"
+                   FontSize="16"
+                   TextColor="#cccccc"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   Margin="20,0,20,20"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Game Active Message (shown when all players have seen cards) -->
+            <Label Grid.Row="1"
+                   x:Name="GameActiveLabel"
+                   Text="🎮 GAME ACTIVE 🎮&#10;&#10;All players have seen their cards!&#10;Discuss and try to find the spy!"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False" />
+
+        </Grid>
+
+        <!-- Bottom Section -->
+        <Frame Grid.Row="2" 
+               BackgroundColor="#2a2a2a" 
+               CornerRadius="0" 
+               Padding="20"
+               Margin="0">
+            
+            <VerticalStackLayout Spacing="15">
+                
+                <!-- Timer and End Game (shown when all players have seen cards) -->
+                <VerticalStackLayout x:Name="GameEndSection"
+                                     Spacing="10"
+                                     IsVisible="False">
+
+                    <Label x:Name="FinalTimerLabel"
+                           Text="Game Time: 00:00"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <Button x:Name="EndGameButton"
+                            Text="END GAME"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            BackgroundColor="#ff4444"
+                            TextColor="White"
+                            CornerRadius="20"
+                            HeightRequest="50"
+                            Clicked="OnEndGame" />
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </Frame>
+
+    </Grid>
+
+</ContentPage>

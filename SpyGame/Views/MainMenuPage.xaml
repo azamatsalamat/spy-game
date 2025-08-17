@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SpyGame.Views.MainMenuPage"
+             Title="Spy Game - Main Menu"
+             BackgroundColor="#1a1a1a">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="30">
+            
+            <!-- Title -->
+            <Label Text="SPY GAME"
+                   Style="{StaticResource Headline}"
+                   HorizontalOptions="Center"
+                   TextColor="White"
+                   FontSize="48"
+                   FontAttributes="Bold"
+                   Margin="0,20,0,0" />
+
+            <Label Text="Find the spy among your friends!"
+                   Style="{StaticResource SubHeadline}"
+                   HorizontalOptions="Center"
+                   TextColor="#cccccc"
+                   FontSize="18" />
+
+            <!-- Word Pack Selection -->
+            <Frame BackgroundColor="#2a2a2a" 
+                   CornerRadius="15" 
+                   Padding="20"
+                   Margin="0,20,0,0">
+                
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Select Word Pack"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <Picker x:Name="WordPackPicker"
+                            Title="Choose a word pack..."
+                            TextColor="White"
+                            BackgroundColor="#3a3a3a"
+                            FontSize="20"
+                            SelectedIndexChanged="OnWordPackSelected" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Player Count Selection -->
+            <Frame BackgroundColor="#2a2a2a" 
+                   CornerRadius="15" 
+                   Padding="20">
+                
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Number of Players"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                        <Button Text="-"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                CornerRadius="25"
+                                BackgroundColor="#ff4444"
+                                TextColor="White"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                Clicked="OnDecreasePlayers" />
+
+                        <Label x:Name="PlayerCountLabel"
+                               Text="4"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               VerticalOptions="Center"
+                               WidthRequest="60"
+                               HorizontalTextAlignment="Center" />
+
+                        <Button Text="+"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                CornerRadius="25"
+                                BackgroundColor="#44ff44"
+                                TextColor="White"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                Clicked="OnIncreasePlayers" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Start Game Button -->
+            <Button x:Name="StartGameButton"
+                    Text="START GAME"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    CornerRadius="25"
+                    HeightRequest="60"
+                    Margin="20,20,20,0"
+                    Clicked="OnStartGame" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
