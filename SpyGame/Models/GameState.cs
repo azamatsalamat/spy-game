@@ -4,8 +4,9 @@ namespace SpyGame.Models
     {
         public WordPack SelectedPack { get; set; } = new WordPack();
         public int PlayerCount { get; set; } = 0;
+        public int SpyCount { get; set; } = 1;
         public string CurrentWord { get; set; } = string.Empty;
-        public int SpyPlayerIndex { get; set; } = -1;
+        public List<int> SpyPlayerIndices { get; set; } = new List<int>();
         public int CurrentPlayerIndex { get; set; } = 0;
         public bool IsGameActive { get; set; } = false;
         public DateTime GameStartTime { get; set; } = DateTime.MinValue;
@@ -18,7 +19,17 @@ namespace SpyGame.Models
 
             var random = new Random();
             CurrentWord = SelectedPack.Words[random.Next(SelectedPack.Words.Count)];
-            SpyPlayerIndex = random.Next(PlayerCount);
+            
+            SpyPlayerIndices.Clear();
+            var availablePlayers = Enumerable.Range(0, PlayerCount).ToList();
+            
+            for (int i = 0; i < SpyCount && availablePlayers.Count > 0; i++)
+            {
+                int randomIndex = random.Next(availablePlayers.Count);
+                SpyPlayerIndices.Add(availablePlayers[randomIndex]);
+                availablePlayers.RemoveAt(randomIndex);
+            }
+            
             CurrentPlayerIndex = 0;
             IsGameActive = true;
             GameStartTime = DateTime.Now;
@@ -38,7 +49,7 @@ namespace SpyGame.Models
 
         public bool IsCurrentPlayerSpy()
         {
-            return CurrentPlayerIndex == SpyPlayerIndex;
+            return SpyPlayerIndices.Contains(CurrentPlayerIndex);
         }
 
         public TimeSpan GetGameElapsedTime()
@@ -52,7 +63,7 @@ namespace SpyGame.Models
         public void ResetGame()
         {
             CurrentWord = string.Empty;
-            SpyPlayerIndex = -1;
+            SpyPlayerIndices.Clear();
             CurrentPlayerIndex = 0;
             IsGameActive = false;
             GameStartTime = DateTime.MinValue;

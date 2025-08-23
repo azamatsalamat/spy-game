@@ -90,6 +90,51 @@
                 </VerticalStackLayout>
             </Frame>
 
+            <!-- Spy Count Selection -->
+            <Frame BackgroundColor="#2a2a2a" 
+                   CornerRadius="15" 
+                   Padding="20">
+                
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Number of Spies"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                        <Button Text="-"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                CornerRadius="25"
+                                BackgroundColor="#ff4444"
+                                TextColor="White"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                Clicked="OnDecreaseSpies" />
+
+                        <Label x:Name="SpyCountLabel"
+                               Text="1"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               VerticalOptions="Center"
+                               WidthRequest="60"
+                               HorizontalTextAlignment="Center" />
+
+                        <Button Text="+"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                CornerRadius="25"
+                                BackgroundColor="#44ff44"
+                                TextColor="White"
+                                FontSize="24"
+                                FontAttributes="Bold"
+                                Clicked="OnIncreaseSpies" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
             <!-- Start Game Button -->
             <Button x:Name="StartGameButton"
                     Text="START GAME"

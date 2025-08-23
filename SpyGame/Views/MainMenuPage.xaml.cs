@@ -9,6 +9,7 @@ namespace SpyGame.Views
         private List<WordPack> _wordPacks;
         private WordPack? _selectedPack;
         private int _playerCount = 4;
+        private int _spyCount = 1;
 
         public MainMenuPage()
         {
@@ -18,6 +19,7 @@ namespace SpyGame.Views
             
             InitializeWordPackPicker();
             UpdatePlayerCountDisplay();
+            UpdateSpyCountDisplay();
         }
 
         private void InitializeWordPackPicker()
@@ -61,6 +63,30 @@ namespace SpyGame.Views
         private void UpdatePlayerCountDisplay()
         {
             PlayerCountLabel.Text = _playerCount.ToString();
+            UpdateSpyCountDisplay();
+        }
+
+        private void OnDecreaseSpies(object sender, EventArgs e)
+        {
+            if (_spyCount > 1)
+            {
+                _spyCount--;
+                UpdateSpyCountDisplay();
+            }
+        }
+
+        private void OnIncreaseSpies(object sender, EventArgs e)
+        {
+            if (_spyCount < _playerCount)
+            {
+                _spyCount++;
+                UpdateSpyCountDisplay();
+            }
+        }
+
+        private void UpdateSpyCountDisplay()
+        {
+            SpyCountLabel.Text = _spyCount.ToString();
         }
 
         private async void OnStartGame(object sender, EventArgs e)
@@ -77,10 +103,17 @@ namespace SpyGame.Views
                 return;
             }
 
+            if (_spyCount >= _playerCount)
+            {
+                await DisplayAlert("Error", "Number of spies must be less than number of players", "OK");
+                return;
+            }
+
             var gameState = new GameState
             {
                 SelectedPack = _selectedPack,
-                PlayerCount = _playerCount
+                PlayerCount = _playerCount,
+                SpyCount = _spyCount
             };
 
             // Simple page replacement to avoid NavigationPage issues
