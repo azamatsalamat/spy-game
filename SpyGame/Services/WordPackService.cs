@@ -1,14 +1,39 @@
 using SpyGame.Models;
+using System.Text.Json;
 
 namespace SpyGame.Services
 {
     public class WordPackService
     {
+        private static WordPackService? _instance;
+        private static readonly object _lock = new object();
+        
         private List<WordPack> _wordPacks = new();
+        private List<WordPack> _customPacks = new();
+        private readonly string _customPacksFileName = "custom_packs.json";
 
-        public WordPackService()
+        public static WordPackService Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new WordPackService();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
+
+        private WordPackService()
         {
             InitializeDefaultPacks();
+            _ = LoadCustomPacksAsync();
         }
 
         private void InitializeDefaultPacks()
@@ -73,14 +98,92 @@ namespace SpyGame.Services
             };
         }
 
+        public WordPack? GetPackByName(string name)
+        {
+            var defaultPack = _wordPacks.FirstOrDefault(pack => pack.Name == name);
+            if (defaultPack != null) return defaultPack;
+            
+            return _customPacks.FirstOrDefault(pack => pack.Name == name);
+        }
+
         public List<WordPack> GetAllPacks()
+        {
+            var allPacks = new List<WordPack>();
+            allPacks.AddRange(_wordPacks);
+            allPacks.AddRange(_customPacks);
+            return allPacks;
+        }
+
+        public List<WordPack> GetDefaultPacks()
         {
             return _wordPacks;
         }
 
-        public WordPack? GetPackByName(string name)
+        public List<WordPack> GetCustomPacks()
         {
-            return _wordPacks.FirstOrDefault(pack => pack.Name == name);
+            return _customPacks;
+        }
+
+        public async Task AddCustomPack(WordPack pack)
+        {
+            if (string.IsNullOrWhiteSpace(pack.Name))
+                throw new ArgumentException("Pack name cannot be empty");
+
+            if (pack.Words.Count < 2)
+                throw new ArgumentException("Pack must contain at least 2 words");
+
+            if (_wordPacks.Any(p => p.Name == pack.Name) || _customPacks.Any(p => p.Name == pack.Name))
+                throw new ArgumentException("A pack with this name already exists");
+
+            pack.IsCustom = true;
+            _customPacks.Add(pack);
+            await SaveCustomPacks();
+        }
+
+        public async Task DeleteCustomPack(string packName)
+        {
+            var pack = _customPacks.FirstOrDefault(p => p.Name == packName);
+            if (pack != null)
+            {
+                _customPacks.Remove(pack);
+                await SaveCustomPacks();
+            }
+        }
+
+        public async Task RefreshCustomPacks()
+        {
+            await LoadCustomPacksAsync();
+        }
+
+        private async Task LoadCustomPacksAsync()
+        {
+            try
+            {
+                var filePath = Path.Combine(FileSystem.AppDataDirectory, _customPacksFileName);
+                if (File.Exists(filePath))
+                {
+                    var json = await File.ReadAllTextAsync(filePath);
+                    _customPacks = JsonSerializer.Deserialize<List<WordPack>>(json) ?? new List<WordPack>();
+                }
+            }
+            catch
+            {
+                _customPacks = new List<WordPack>();
+            }
+        }
+
+        private async Task SaveCustomPacks()
+        {
+            try
+            {
+                var filePath = Path.Combine(FileSystem.AppDataDirectory, _customPacksFileName);
+                var json = JsonSerializer.Serialize(_customPacks, new JsonSerializerOptions { WriteIndented = true });
+                await File.WriteAllTextAsync(filePath, json);
+            }
+            catch
+            {
+                // Handle save error silently for now
+            }
         }
     }
 }

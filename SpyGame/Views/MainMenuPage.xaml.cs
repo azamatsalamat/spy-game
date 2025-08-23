@@ -6,7 +6,7 @@ namespace SpyGame.Views
     public partial class MainMenuPage : ContentPage
     {
         private WordPackService _wordPackService;
-        private List<WordPack> _wordPacks;
+        private List<WordPack>? _wordPacks;
         private WordPack? _selectedPack;
         private int _playerCount = 4;
         private int _spyCount = 1;
@@ -14,31 +14,68 @@ namespace SpyGame.Views
         public MainMenuPage()
         {
             InitializeComponent();
-            _wordPackService = new WordPackService();
-            _wordPacks = _wordPackService.GetAllPacks();
+            _wordPackService = WordPackService.Instance;
+            LoadWordPacks();
             
             InitializeWordPackPicker();
             UpdatePlayerCountDisplay();
             UpdateSpyCountDisplay();
         }
 
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await _wordPackService.RefreshCustomPacks();
+            LoadWordPacks();
+            InitializeWordPackPicker();
+        }
+
+        private void LoadWordPacks()
+        {
+            _wordPacks = _wordPackService.GetAllPacks();
+        }
+
         private void InitializeWordPackPicker()
         {
-            var packNames = _wordPacks.Select(pack => pack.Name).ToList();
+            if (_wordPacks == null) return;
+            
+            var currentSelection = WordPackPicker.SelectedItem as string;
+            var packNames = _wordPacks.Select(pack => pack.IsCustom ? $"{pack.Name} (Custom)" : pack.Name).ToList();
             WordPackPicker.ItemsSource = packNames;
             
             if (packNames.Count > 0)
             {
-                WordPackPicker.SelectedIndex = 0;
-                _selectedPack = _wordPacks[0];
+                if (!string.IsNullOrEmpty(currentSelection))
+                {
+                    var matchingPack = _wordPacks.FirstOrDefault(p => 
+                        (p.IsCustom ? $"{p.Name} (Custom)" : p.Name) == currentSelection);
+                    if (matchingPack != null)
+                    {
+                        WordPackPicker.SelectedItem = currentSelection;
+                        _selectedPack = matchingPack;
+                    }
+                    else
+                    {
+                        WordPackPicker.SelectedIndex = 0;
+                        _selectedPack = _wordPacks[0];
+                    }
+                }
+                else
+                {
+                    WordPackPicker.SelectedIndex = 0;
+                    _selectedPack = _wordPacks[0];
+                }
             }
         }
 
+
+
         private void OnWordPackSelected(object sender, EventArgs e)
         {
-            if (WordPackPicker.SelectedIndex >= 0 && WordPackPicker.SelectedIndex < _wordPacks.Count)
+            if (_wordPacks != null && WordPackPicker.SelectedItem is string selectedItem)
             {
-                _selectedPack = _wordPacks[WordPackPicker.SelectedIndex];
+                var selectedPackName = selectedItem.Replace(" (Custom)", "");
+                _selectedPack = _wordPacks.FirstOrDefault(p => p.Name == selectedPackName);
             }
         }
 
@@ -116,8 +153,12 @@ namespace SpyGame.Views
                 SpyCount = _spyCount
             };
 
-            // Simple page replacement to avoid NavigationPage issues
-            Application.Current!.MainPage = new GamePage(gameState);
+            NavigationService.NavigateToGame(gameState);
+        }
+
+        private void OnCustomPacks(object sender, EventArgs e)
+        {
+            NavigationService.NavigateToCustomPacks();
         }
     }
 }

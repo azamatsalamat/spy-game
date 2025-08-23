@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SpyGame.Views.CustomPacksPage"
+             Title="Custom Word Packs"
+             BackgroundColor="#1a1a1a">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <Label Text="Custom Word Packs"
+                   Style="{StaticResource Headline}"
+                   HorizontalOptions="Center"
+                   TextColor="White"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0" />
+
+            <Label Text="Create and manage your own word packs"
+                   Style="{StaticResource SubHeadline}"
+                   HorizontalOptions="Center"
+                   TextColor="#cccccc"
+                   FontSize="16" />
+
+            <!-- Add New Pack Section -->
+            <Frame BackgroundColor="#2a2a2a" 
+                   CornerRadius="15" 
+                   Padding="20">
+                
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Add New Pack"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <Entry x:Name="PackNameEntry"
+                           Placeholder="Enter pack name..."
+                           PlaceholderColor="#888888"
+                           TextColor="White"
+                           BackgroundColor="#3a3a3a"
+                           FontSize="16"
+                           Margin="0,10,0,0"
+                           Keyboard="Text"
+                           TextTransform="Default" />
+
+                    <Label Text="Words (one per line, minimum 2)"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           Margin="0,15,0,5" />
+
+                    <Editor x:Name="WordsEditor"
+                            Placeholder="Enter words here, one per line..."
+                            PlaceholderColor="#888888"
+                            TextColor="White"
+                            BackgroundColor="#3a3a3a"
+                            FontSize="16"
+                            HeightRequest="120"
+                            AutoSize="TextChanges"
+                            Keyboard="Text"
+                            TextTransform="Default" />
+
+                    <Button Text="ADD PACK"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            CornerRadius="20"
+                            HeightRequest="50"
+                            Margin="0,15,0,0"
+                            Clicked="OnAddPack" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Existing Custom Packs Section -->
+            <Frame BackgroundColor="#2a2a2a" 
+                   CornerRadius="15" 
+                   Padding="20">
+                
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Your Custom Packs"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+
+                    <CollectionView x:Name="CustomPacksCollection"
+                                   ItemsSource="{Binding CustomPacks}"
+                                   HeightRequest="300">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BackgroundColor="#3a3a3a" 
+                                       CornerRadius="10" 
+                                       Padding="15"
+                                       Margin="0,5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Text="{Binding Name}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="White"
+                                               Grid.Row="0" Grid.Column="0" />
+
+                                        <Label Text="{Binding Words.Count, StringFormat='{0} words'}"
+                                               FontSize="14"
+                                               TextColor="#cccccc"
+                                               Grid.Row="1" Grid.Column="0"
+                                               Margin="0,5,0,0" />
+
+                                        <Button Text="DELETE"
+                                                FontSize="12"
+                                                FontAttributes="Bold"
+                                                BackgroundColor="#ff4444"
+                                                TextColor="White"
+                                                CornerRadius="15"
+                                                HeightRequest="30"
+                                                WidthRequest="80"
+                                                Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                                Clicked="OnDeletePack"
+                                                CommandParameter="{Binding Name}" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label x:Name="NoPacksLabel"
+                           Text="No custom packs yet. Create your first one above!"
+                           FontSize="16"
+                           TextColor="#888888"
+                           HorizontalOptions="Center"
+                           IsVisible="False" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Back Button -->
+            <Button Text="BACK TO MENU"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    BackgroundColor="#666666"
+                    TextColor="White"
+                    CornerRadius="20"
+                    HeightRequest="50"
+                    Margin="0,10,0,0"
+                    Clicked="OnBackToMenu" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

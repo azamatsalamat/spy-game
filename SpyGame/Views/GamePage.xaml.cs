@@ -1,4 +1,5 @@
 using SpyGame.Models;
+using SpyGame.Services;
 
 namespace SpyGame.Views
 {
@@ -135,7 +136,7 @@ namespace SpyGame.Views
                 _timer?.Stop();
                 
                 // Simple page replacement back to main menu
-                Application.Current!.MainPage = new Views.MainMenuPage();
+                NavigationService.NavigateToMainMenu();
             }
         }
 
