@@ -11,26 +11,35 @@ namespace SpyGame.Services
             {
                 try
                 {
-                    var oldPage = Application.Current.MainPage;
-                    Application.Current.MainPage = page;
-                    
-                    // Dispose of the old page to prevent memory leaks
-                    if (oldPage is IDisposable disposable)
+                    if (Application.Current.MainPage is NavigationPage navigationPage)
                     {
-                        disposable.Dispose();
+                        navigationPage.PushAsync(page);
+                    }
+                    else
+                    {
+                        Application.Current.MainPage = new NavigationPage(page);
                     }
                 }
                 catch
                 {
-                    // Fallback for Android navigation issues
-                    Application.Current.MainPage = page;
+                    Application.Current.MainPage = new NavigationPage(page);
                 }
             }
         }
 
         public static void NavigateToMainMenu()
         {
-            NavigateTo(new MainMenuPage());
+            if (Application.Current?.MainPage != null)
+            {
+                if (Application.Current.MainPage is NavigationPage navigationPage)
+                {
+                    navigationPage.PopToRootAsync();
+                }
+                else
+                {
+                    Application.Current.MainPage = new NavigationPage(new MainMenuPage());
+                }
+            }
         }
 
         public static void NavigateToCustomPacks()

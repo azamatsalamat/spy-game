@@ -6,7 +6,6 @@ public partial class App : Application
 	{
 		InitializeComponent();
 
-		// Use simple ContentPage to avoid NavigationPage issues
-		MainPage = new Views.MainMenuPage();
+		MainPage = new NavigationPage(new Views.MainMenuPage());
 	}
 }

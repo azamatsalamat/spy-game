@@ -119,9 +119,6 @@ namespace SpyGame.Views
             }
         }
 
-        private void OnBackToMenu(object sender, EventArgs e)
-        {
-            NavigationService.NavigateToMainMenu();
-        }
+
     }
 }

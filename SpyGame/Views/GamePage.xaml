@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SpyGame.Views.GamePage"
              Title="Spy Game"
-             BackgroundColor="#1a1a1a">
+             BackgroundColor="#1a1a1a"
+             NavigationPage.HasNavigationBar="False">
 
     <Grid>
         <Grid.RowDefinitions>
