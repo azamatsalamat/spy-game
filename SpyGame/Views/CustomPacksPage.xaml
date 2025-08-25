@@ -118,12 +118,13 @@
                                                Margin="0,5,0,0" />
 
                                         <Button Text="DELETE"
-                                                FontSize="12"
+                                                FontSize="14"
+                                                Padding="5"
                                                 FontAttributes="Bold"
                                                 BackgroundColor="#ff4444"
                                                 TextColor="White"
                                                 CornerRadius="15"
-                                                HeightRequest="30"
+                                                HeightRequest="40"
                                                 WidthRequest="80"
                                                 Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                                                 Clicked="OnDeletePack"
