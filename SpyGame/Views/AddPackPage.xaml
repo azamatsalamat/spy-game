@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SpyGame.Views.AddPackPage"
+             Title="Add New Pack"
+             BackgroundColor="#1a1a1a"
+             NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <Label Text="Add New Pack"
+                   Style="{StaticResource Headline}"
+                   HorizontalOptions="Center"
+                   TextColor="White"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0" />
+
+            <Label Text="Create your own custom word pack"
+                   Style="{StaticResource SubHeadline}"
+                   HorizontalOptions="Center"
+                   TextColor="#cccccc"
+                   FontSize="16" />
+
+            <Frame BackgroundColor="#2a2a2a" 
+                   CornerRadius="15" 
+                   Padding="20">
+                
+                <VerticalStackLayout Spacing="15">
+                    <Entry x:Name="PackNameEntry"
+                           Placeholder="Enter pack name..."
+                           PlaceholderColor="#888888"
+                           TextColor="White"
+                           BackgroundColor="#3a3a3a"
+                           FontSize="16"
+                           Margin="0,10,0,0"
+                           Keyboard="Text"
+                           TextTransform="Default" />
+
+                    <Label Text="Words (one per line, minimum 2)"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           Margin="0,15,0,5" />
+
+                    <Editor x:Name="WordsEditor"
+                            Placeholder="Enter words here, one per line..."
+                            PlaceholderColor="#888888"
+                            TextColor="White"
+                            BackgroundColor="#3a3a3a"
+                            FontSize="16"
+                            HeightRequest="120"
+                            AutoSize="TextChanges"
+                            Keyboard="Text"
+                            TextTransform="Default" />
+
+                    <Button Text="ADD PACK"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            CornerRadius="20"
+                            HeightRequest="50"
+                            Margin="0,15,0,0"
+                            Clicked="OnAddPack" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

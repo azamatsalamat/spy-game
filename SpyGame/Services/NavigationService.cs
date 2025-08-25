@@ -47,6 +47,11 @@ namespace SpyGame.Services
             NavigateTo(new CustomPacksPage());
         }
 
+        public static void NavigateToAddPack()
+        {
+            NavigateTo(new AddPackPage());
+        }
+
         public static void NavigateToGame(GameState gameState)
         {
             NavigateTo(new GamePage(gameState));

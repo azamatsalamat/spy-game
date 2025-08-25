@@ -16,6 +16,11 @@ namespace SpyGame.Views
             CustomPacks = new ObservableCollection<WordPack>();
             
             BindingContext = this;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
             LoadCustomPacks();
         }
 
@@ -38,55 +43,9 @@ namespace SpyGame.Views
             CustomPacksCollection.IsVisible = CustomPacks.Count > 0;
         }
 
-        private async void OnAddPack(object sender, EventArgs e)
+        private void OnAddNewPack(object sender, EventArgs e)
         {
-            var packName = PackNameEntry.Text?.Trim();
-            var wordsText = WordsEditor.Text?.Trim();
-
-            if (string.IsNullOrWhiteSpace(packName))
-            {
-                await DisplayAlert("Error", "Please enter a pack name", "OK");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(wordsText))
-            {
-                await DisplayAlert("Error", "Please enter some words", "OK");
-                return;
-            }
-
-            var words = wordsText.Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                                .Select(w => w.Trim())
-                                .Where(w => !string.IsNullOrWhiteSpace(w))
-                                .ToList();
-
-            if (words.Count < 2)
-            {
-                await DisplayAlert("Error", "Pack must contain at least 2 words", "OK");
-                return;
-            }
-
-            try
-            {
-                var newPack = new WordPack(packName, words);
-                await _wordPackService.AddCustomPack(newPack);
-                
-                CustomPacks.Add(newPack);
-                UpdateNoPacksVisibility();
-                
-                PackNameEntry.Text = string.Empty;
-                WordsEditor.Text = string.Empty;
-                
-                await DisplayAlert("Success", "Custom pack added successfully!", "OK");
-            }
-            catch (ArgumentException ex)
-            {
-                await DisplayAlert("Error", ex.Message, "OK");
-            }
-            catch
-            {
-                await DisplayAlert("Error", "Failed to save custom pack", "OK");
-            }
+            NavigationService.NavigateToAddPack();
         }
 
         private async void OnDeletePack(object sender, EventArgs e)
