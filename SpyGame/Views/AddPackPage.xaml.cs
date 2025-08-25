@@ -48,7 +48,7 @@ namespace SpyGame.Views
                 
                 await DisplayAlert("Success", "Custom pack added successfully!", "OK");
                 
-                NavigationService.NavigateToCustomPacks();
+                await Navigation.PopAsync();
             }
             catch (ArgumentException ex)
             {
