@@ -52,6 +52,11 @@ namespace SpyGame.Services
             NavigateTo(new AddPackPage());
         }
 
+        public static void NavigateToEditPack(WordPack pack)
+        {
+            NavigateTo(new AddPackPage(pack));
+        }
+
         public static void NavigateToGame(GameState gameState)
         {
             NavigateTo(new GamePage(gameState));

@@ -6,11 +6,33 @@ namespace SpyGame.Views
     public partial class AddPackPage : ContentPage
     {
         private WordPackService _wordPackService;
+        private WordPack? _editingPack;
+        private bool _isEditing;
 
         public AddPackPage()
         {
             InitializeComponent();
             _wordPackService = WordPackService.Instance;
+            _isEditing = false;
+        }
+
+        public AddPackPage(WordPack pack)
+        {
+            InitializeComponent();
+            _wordPackService = WordPackService.Instance;
+            _editingPack = pack;
+            _isEditing = true;
+            LoadPackForEditing();
+        }
+
+        private void LoadPackForEditing()
+        {
+            PageTitleLabel.Text = "Edit Pack";
+            PageSubtitleLabel.Text = "Modify your custom word pack";
+            SaveButton.Text = "SAVE CHANGES";
+            
+            PackNameEntry.Text = _editingPack.Name;
+            WordsEditor.Text = string.Join("\n", _editingPack.Words);
         }
 
         private async void OnAddPack(object sender, EventArgs e)
@@ -43,10 +65,17 @@ namespace SpyGame.Views
 
             try
             {
-                var newPack = new WordPack(packName, words);
-                await _wordPackService.AddCustomPack(newPack);
-                
-                await DisplayAlert("Success", "Custom pack added successfully!", "OK");
+                if (_isEditing)
+                {
+                    await _wordPackService.UpdateCustomPack(_editingPack.Name, packName, words);
+                    await DisplayAlert("Success", "Custom pack updated successfully!", "OK");
+                }
+                else
+                {
+                    var newPack = new WordPack(packName, words);
+                    await _wordPackService.AddCustomPack(newPack);
+                    await DisplayAlert("Success", "Custom pack added successfully!", "OK");
+                }
                 
                 await Navigation.PopAsync();
             }
@@ -56,7 +85,7 @@ namespace SpyGame.Views
             }
             catch
             {
-                await DisplayAlert("Error", "Failed to save custom pack", "OK");
+                await DisplayAlert("Error", _isEditing ? "Failed to update custom pack" : "Failed to save custom pack", "OK");
             }
         }
     }

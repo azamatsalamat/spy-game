@@ -150,6 +150,26 @@ namespace SpyGame.Services
             }
         }
 
+        public async Task UpdateCustomPack(string oldName, string newName, List<string> words)
+        {
+            if (string.IsNullOrWhiteSpace(newName))
+                throw new ArgumentException("Pack name cannot be empty");
+
+            if (words.Count < 2)
+                throw new ArgumentException("Pack must contain at least 2 words");
+
+            var existingPack = _customPacks.FirstOrDefault(p => p.Name == oldName);
+            if (existingPack == null)
+                throw new ArgumentException("Pack not found");
+
+            if (oldName != newName && (_wordPacks.Any(p => p.Name == newName) || _customPacks.Any(p => p.Name == newName)))
+                throw new ArgumentException("A pack with this name already exists");
+
+            existingPack.Name = newName;
+            existingPack.Words = words;
+            await SaveCustomPacks();
+        }
+
         public async Task RefreshCustomPacks()
         {
             await LoadCustomPacksAsync();

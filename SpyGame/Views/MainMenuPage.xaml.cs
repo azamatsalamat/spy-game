@@ -40,7 +40,7 @@ namespace SpyGame.Views
             if (_wordPacks == null) return;
             
             var currentSelection = WordPackPicker.SelectedItem as string;
-            var packNames = _wordPacks.Select(pack => pack.IsCustom ? $"{pack.Name} (Custom)" : pack.Name).ToList();
+            var packNames = _wordPacks.OrderByDescending(x => x.IsCustom).Select(pack => pack.IsCustom ? $"{pack.Name} (Custom)" : pack.Name).ToList();
             WordPackPicker.ItemsSource = packNames;
             
             if (packNames.Count > 0)

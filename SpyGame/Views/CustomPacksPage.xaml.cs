@@ -18,9 +18,10 @@ namespace SpyGame.Views
             BindingContext = this;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
+            await _wordPackService.RefreshCustomPacks();
             LoadCustomPacks();
         }
 
@@ -78,6 +79,13 @@ namespace SpyGame.Views
             }
         }
 
+        private void OnPackTapped(object sender, TappedEventArgs e)
+        {
+            if (e.Parameter is WordPack pack)
+            {
+                NavigationService.NavigateToEditPack(pack);
+            }
+        }
 
     }
 }
