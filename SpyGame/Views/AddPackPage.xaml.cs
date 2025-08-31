@@ -6,6 +6,7 @@ namespace SpyGame.Views
     public partial class AddPackPage : ContentPage
     {
         private WordPackService _wordPackService;
+        private PreferencesService _preferencesService;
         private WordPack? _editingPack;
         private bool _isEditing;
 
@@ -13,6 +14,7 @@ namespace SpyGame.Views
         {
             InitializeComponent();
             _wordPackService = WordPackService.Instance;
+            _preferencesService = PreferencesService.Instance;
             _isEditing = false;
         }
 
@@ -20,6 +22,7 @@ namespace SpyGame.Views
         {
             InitializeComponent();
             _wordPackService = WordPackService.Instance;
+            _preferencesService = PreferencesService.Instance;
             _editingPack = pack;
             _isEditing = true;
             LoadPackForEditing();
@@ -68,6 +71,7 @@ namespace SpyGame.Views
                 if (_isEditing)
                 {
                     await _wordPackService.UpdateCustomPack(_editingPack.Name, packName, words);
+                    await _preferencesService.SaveLastSelectedPack(packName);
                     await DisplayAlert("Success", "Custom pack updated successfully!", "OK");
                 }
                 else

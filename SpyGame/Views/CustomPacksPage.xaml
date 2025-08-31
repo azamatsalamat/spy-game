@@ -6,6 +6,8 @@
              BackgroundColor="#1a1a1a"
              NavigationPage.HasNavigationBar="False">
 
+
+
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
             
@@ -57,11 +59,16 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Label Text="{Binding Name}"
-                                               FontSize="18"
-                                               FontAttributes="Bold"
-                                               TextColor="White"
-                                               Grid.Row="0" Grid.Column="0" />
+                                        <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="18"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White" />
+                                            <Label Text=" (Last Selected)"
+                                                   FontSize="12"
+                                                   TextColor="#4CAF50"
+                                                   IsVisible="{Binding IsLastSelected}" />
+                                        </StackLayout>
 
                                         <Label Text="{Binding Words.Count, StringFormat='{0} words'}"
                                                FontSize="14"

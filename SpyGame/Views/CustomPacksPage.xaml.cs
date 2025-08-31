@@ -7,12 +7,15 @@ namespace SpyGame.Views
     public partial class CustomPacksPage : ContentPage
     {
         private WordPackService _wordPackService;
+        private PreferencesService _preferencesService;
         public ObservableCollection<WordPack> CustomPacks { get; set; }
+        public string? LastSelectedPackName { get; set; }
 
         public CustomPacksPage()
         {
             InitializeComponent();
             _wordPackService = WordPackService.Instance;
+            _preferencesService = PreferencesService.Instance;
             CustomPacks = new ObservableCollection<WordPack>();
             
             BindingContext = this;
@@ -22,6 +25,7 @@ namespace SpyGame.Views
         {
             base.OnAppearing();
             await _wordPackService.RefreshCustomPacks();
+            LastSelectedPackName = await _preferencesService.GetLastSelectedPack();
             LoadCustomPacks();
         }
 
@@ -32,6 +36,7 @@ namespace SpyGame.Views
             
             foreach (var pack in customPacks)
             {
+                pack.IsLastSelected = pack.Name == LastSelectedPackName;
                 CustomPacks.Add(pack);
             }
             
@@ -79,10 +84,11 @@ namespace SpyGame.Views
             }
         }
 
-        private void OnPackTapped(object sender, TappedEventArgs e)
+        private async void OnPackTapped(object sender, TappedEventArgs e)
         {
             if (e.Parameter is WordPack pack)
             {
+                await _preferencesService.SaveLastSelectedPack(pack.Name);
                 NavigationService.NavigateToEditPack(pack);
             }
         }
