@@ -109,8 +109,8 @@ namespace SpyGame.Services
         public List<WordPack> GetAllPacks()
         {
             var allPacks = new List<WordPack>();
-            allPacks.AddRange(_wordPacks);
             allPacks.AddRange(_customPacks);
+            allPacks.AddRange(_wordPacks);
             return allPacks;
         }
 

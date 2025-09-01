@@ -1,3 +1,4 @@
+using System.Text.Json;
 using SpyGame.Models;
 using SpyGame.Services;
 
@@ -10,6 +11,7 @@ namespace SpyGame.Views
         private WordPack? _selectedPack;
         private int _playerCount = 4;
         private int _spyCount = 1;
+        private readonly string _lastSelectedFileName = "last_selected.json";
 
         public MainMenuPage()
         {
@@ -17,7 +19,7 @@ namespace SpyGame.Views
             _wordPackService = WordPackService.Instance;
             LoadWordPacks();
             
-            InitializeWordPackPicker();
+            _ = InitializeWordPackPicker();
             UpdatePlayerCountDisplay();
             UpdateSpyCountDisplay();
         }
@@ -27,7 +29,7 @@ namespace SpyGame.Views
             base.OnAppearing();
             await _wordPackService.RefreshCustomPacks();
             LoadWordPacks();
-            InitializeWordPackPicker();
+            await InitializeWordPackPicker();
         }
 
         private void LoadWordPacks()
@@ -35,12 +37,12 @@ namespace SpyGame.Views
             _wordPacks = _wordPackService.GetAllPacks();
         }
 
-        private void InitializeWordPackPicker()
+        private async Task InitializeWordPackPicker()
         {
             if (_wordPacks == null) return;
             
             var currentSelection = WordPackPicker.SelectedItem as string;
-            var packNames = _wordPacks.OrderByDescending(x => x.IsCustom).Select(pack => pack.IsCustom ? $"{pack.Name} (Custom)" : pack.Name).ToList();
+            var packNames = _wordPacks.Select(pack => pack.IsCustom ? $"{pack.Name} (Custom)" : pack.Name).ToList();
             WordPackPicker.ItemsSource = packNames;
             
             if (packNames.Count > 0)
@@ -56,14 +58,12 @@ namespace SpyGame.Views
                     }
                     else
                     {
-                        WordPackPicker.SelectedIndex = 0;
-                        _selectedPack = _wordPacks[0];
+                        await LoadSelectedPack();
                     }
                 }
                 else
                 {
-                    WordPackPicker.SelectedIndex = 0;
-                    _selectedPack = _wordPacks[0];
+                    await LoadSelectedPack();
                 }
             }
         }
@@ -153,12 +153,49 @@ namespace SpyGame.Views
                 SpyCount = _spyCount
             };
 
+            await SaveSelectedPack();
             NavigationService.NavigateToGame(gameState);
         }
 
         private void OnCustomPacks(object sender, EventArgs e)
         {
             NavigationService.NavigateToCustomPacks();
+        }
+
+        private async Task LoadSelectedPack()
+        {
+            try
+            {
+                var filePath = Path.Combine(FileSystem.AppDataDirectory, _lastSelectedFileName);
+                if (File.Exists(filePath))
+                {
+                    var json = await File.ReadAllTextAsync(filePath);
+                    _selectedPack = JsonSerializer.Deserialize<WordPack>(json) ?? _wordPacks[0];
+                } else 
+                {
+                    _selectedPack = _wordPacks[0];
+                }
+            }
+            catch 
+            {
+                _selectedPack = _wordPacks[0];
+            }
+
+            WordPackPicker.SelectedIndex = _wordPacks.FindIndex(p => p.Name == _selectedPack?.Name);
+        }
+
+        private async Task SaveSelectedPack()
+        {
+            try
+            {
+                var filePath = Path.Combine(FileSystem.AppDataDirectory, _lastSelectedFileName);
+                var json = JsonSerializer.Serialize(_selectedPack, new JsonSerializerOptions { WriteIndented = true });
+                await File.WriteAllTextAsync(filePath, json);
+            }
+            catch
+            {
+                // Handle save error silently for now
+            }
         }
     }
 }
